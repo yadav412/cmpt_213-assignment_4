@@ -25,7 +25,7 @@ public class Map {
         this.board = new int[BOARD_SIZE][BOARD_SIZE];
         this.fillStatus = new boolean[BOARD_SIZE][BOARD_SIZE];
         // initialize board with random values
-        initializeBoard();
+        initializeMap();
     }
 
     private void initializeMap() {

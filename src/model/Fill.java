@@ -56,7 +56,7 @@ public class Fill {
         if (cellsAdded.isEmpty()) {
             return null;
         }
-        return cellsAdded.get(cellsAdded.size() - 1);
+        return cellsAdded.getLast();
     }
 
     public boolean isAscending() {
