@@ -3,45 +3,91 @@ package model;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Tracks the current fill state, including strength and cells added.
+ */
 public class Fill {
     private int strength;
-    private List<Integer> selectedValues;  // For pattern checking (weapons)
-    private List<Cell> fillOrder;          // For tracking order/final cell
-    private long startTime;                // For time-based weapons
+    private List<int[]> cellsAdded;
+    private List<Integer> valuesAdded;
+    private long startTime;
+    private int cellCount;
 
     public Fill() {
         this.strength = 0;
-        this.selectedValues = new ArrayList<>();
-        this.fillOrder = new ArrayList<>();
+        this.cellsAdded = new ArrayList<>();
+        this.valuesAdded = new ArrayList<>();
         this.startTime = System.currentTimeMillis();
+        this.cellCount = 0;
     }
 
-    public void addCellToFill(Cell cell) {
-        cell.addToFill();  // Mark cell as part of fill
-        strength += cell.getValue();
-        selectedValues.add(cell.getValue());
-        fillOrder.add(cell);  // Track order for weapons/targeting
+    public void addCell(int row, int col, int value) {
+        cellsAdded.add(new int[]{row, col});
+        valuesAdded.add(value);
+        strength += value;
+        cellCount++;
     }
 
-    public boolean isComplete() {
-        return fillOrder.size() >= 8;  // All unique outer cells
+    public void reset() {
+        strength = 0;
+        cellsAdded.clear();
+        valuesAdded.clear();
+        startTime = System.currentTimeMillis();
+        cellCount = 0;
     }
 
-    public Cell getFinalCell() {
-        return fillOrder.get(fillOrder.size() - 1);
+    public int getStrength() {
+        return strength;
+    }
+
+    public int getCellCount() {
+        return cellCount;
+    }
+
+    public long getElapsedTime() {
+        return System.currentTimeMillis() - startTime;
+    }
+
+    public List<Integer> getValuesAdded() {
+        return new ArrayList<>(valuesAdded);
+    }
+
+    public int[] getLastCell() {
+        if (cellsAdded.isEmpty()) {
+            return null;
+        }
+        return cellsAdded.get(cellsAdded.size() - 1);
     }
 
     public boolean isAscending() {
-        // Check for Frost Bow weapon
-        for (int i = 1; i < selectedValues.size(); i++) {
-            if (selectedValues.get(i) < selectedValues.get(i-1)) {
+        if (valuesAdded.size() < 2) {
+            return true;
+        }
+        for (int i = 1; i < valuesAdded.size(); i++) {
+            if (valuesAdded.get(i) <= valuesAdded.get(i - 1)) {
                 return false;
             }
         }
         return true;
     }
 
-    public int getMoveCount() {
-        return selectedValues.size();  // Total moves including re-selections
+    public boolean isDescending() {
+        if (valuesAdded.size() < 2) {
+            return true;
+        }
+        for (int i = 1; i < valuesAdded.size(); i++) {
+            if (valuesAdded.get(i) >= valuesAdded.get(i - 1)) {
+                return false;
+            }
+        }
+        return true;
+
+
+    }
+
+    @Override
+    public String toString() {
+        return "Fill(" + strength + ")";
     }
 }
+
