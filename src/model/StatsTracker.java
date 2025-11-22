@@ -1,6 +1,5 @@
 package model;
 
-import model.weapon.Weapon;
 import model.ring.Ring;
 import java.util.HashMap;
 import java.util.Map;
