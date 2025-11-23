@@ -22,11 +22,6 @@ public class GameEngine {
     private Random random;
     private int turnCounter;  // for periodic opponent attacks
     private int nextOpponentAttack;
-    private boolean cheatLowHealth;
-    private boolean cheatHighHealth;
-    private int basePlayerHealth;
-    private int baseOpponentHealth;
-    private int basePlayerDamage;
 
 
     public GameEngine(Player player) {
@@ -46,7 +41,7 @@ public class GameEngine {
 
     public MoveResult processMove(int enteredSum) {
         turnCounter++;
-        List<Cell> matches = map.findMatchingCells(enteredSum);
+        List<Cell> matches = board.findMatchingCells(enteredSum);
 
         // if enteredSum is invalid, then move has failed, opponent attacks
         if (matches.isEmpty()) {
@@ -76,11 +71,11 @@ public class GameEngine {
         notifyObservers(new SuccessfulMoveEvent(selected, currentFill.getStrength()));
 
         // Update map, center becomes outer value, outer gets new random
-        map.updateAfterMove(selected);
+        board.updateAfterMove(selected);
 
         // Check if fill is complete (8 unique outer cells)
         if (currentFill.isComplete()) {
-            executePlayerAttack();
+            player.attack(opponents, currentFill);  // Player handles attack logic
             resetFill();
         }
 
@@ -89,6 +84,12 @@ public class GameEngine {
 
         return new MoveResult(true, "Selected cell at (" + selected.getRow() +
                 "," + selected.getCol() + ")");
+    }
+
+    public void displayGear() {
+        Weapon weapon = player.getWeapon();
+        Ring[] rings = player.getRings();
+        // TODO display weapon and rings
     }
 
 }

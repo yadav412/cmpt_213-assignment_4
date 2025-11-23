@@ -10,11 +10,11 @@ public class Cell {
     private final int row;
     private final int col;
 
-    public Cell(int row, int col) {
-        this.value = generateRandomValue();
-        this.isPartOfCurrentFill = false;
+    public Cell(int row, int col, int initialValue) {
         this.row = row;
         this.col = col;
+        this.value = initialValue;
+        this.isPartOfCurrentFill = false;
     }
 
     public void addToFill() {
@@ -29,15 +29,19 @@ public class Cell {
         return isPartOfCurrentFill;
     }
 
-    private int generateRandomValue() {
-        return (int)(Math.random() * 16);  // 0-15
-    }
-
     public boolean isCenter() {
         return row == 1 && col == 1;
     }
 
     public boolean isOuter() {
         return !isCenter();
+    }
+
+    public int getValue() {
+        return value;
+    }
+
+    public void setValue(int newValue) {
+        this.value = newValue;
     }
 }

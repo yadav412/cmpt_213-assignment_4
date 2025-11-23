@@ -11,29 +11,40 @@ import java.util.Random;
  */
 public class GameBoard {
     private static final int BOARD_SIZE = 3; // 3x3 board size (indices: 0-2)
+    private static final int DEFAULT_MIN = 0;
+    private static final int DEFAULT_MAX = 15;
     private final Cell[][] board;
-    private final boolean[][] fillStatus; // tracks which cells are part of current fill
     private int minValue;
     private int maxValue;
-    private Random random;
+    private final Random random;
+    private Cell lastAddedCell;
 
     public GameBoard() {
         // generates 2D array of cells (board) that can hold integer values between 0-15
         this.board = new Cell[BOARD_SIZE][BOARD_SIZE];
-        this.fillStatus = new boolean[BOARD_SIZE][BOARD_SIZE];
-        // initialize board with random values
-        initializeMap();
+        this.minValue = DEFAULT_MIN;
+        this.maxValue = DEFAULT_MAX;
+        this.random = new Random();
+        initializeCells();  // initialize board with random values
     }
 
-    private void initializeMap() {
+    // A board of cells is generated with a random number within the range of min - max
+    // min and max are stored in GameBoard but passed to the cell to create itself
+    private void initializeCells() {
         for (int row = 0; row < BOARD_SIZE; row++) {
             for (int col = 0; col < BOARD_SIZE; col++) {
-                board[row][col] = new Cell(row, col);
+                int initialValue = random.nextInt(maxValue - minValue + 1) + minValue;
+                board[row][col] = new Cell(row, col, initialValue);
             }
         }
     }
 
-    public int getCellByRowCol(int row, int col) {
+    public void regenerateCellValue(int row, int col) {
+        int newValue = random.nextInt(maxValue - minValue + 1) + minValue;
+        board[row][col].setValue(newValue);
+    }
+
+    public Cell getCellByRowCol(int row, int col) {
         return board[row][col];
     }
 
@@ -41,16 +52,16 @@ public class GameBoard {
         return (row >= 0 && row < BOARD_SIZE) && (col >= 0 && col < BOARD_SIZE);
     }
 
-    public int getCenter() {
+    public Cell getCenter() {
         return board[1][1];
     }
 
-    public int getCell(int row, int col) {
+    public Cell getCell(int row, int col) {
         return getCellByRowCol(row, col);
     }
 
     public boolean isInFill(int row, int col) {
-        return fillStatus[row][col];
+        return board[row][col].isInFill();  // ask the cell if it is in the fill
     }
 
     public boolean isOuterCell(int row, int col) {
@@ -58,19 +69,20 @@ public class GameBoard {
     }
 
     public void setCellValue(int row, int col, int value) {
-        board[row][col] = value;
+        board[row][col].setValue(value);
     }
 
     public void addToFill(int row, int col) {
         if (isOuterCell(row, col)) {
-            fillStatus[row][col] = true;
+            lastAddedCell = board[row][col];
+            board[row][col].addToFill();    // cell marks itself as being part of the fill
         }
     }
 
     public void resetFill() {
         for (int i = 0; i < BOARD_SIZE; i++) {
             for (int j = 0; j < BOARD_SIZE; j++) {
-                fillStatus[i][j] = false;
+                board[i][j].resetFillStatus();
             }
         }
     }
@@ -78,7 +90,7 @@ public class GameBoard {
     public boolean isFillComplete() {
         for (int i = 0; i < BOARD_SIZE; i++) {
             for (int j = 0; j < BOARD_SIZE; j++) {
-                if (isOuterCell(i, j) && !fillStatus[i][j]) {
+                if (isOuterCell(i, j) && !board[i][j].isInFill()) {
                     return false;
                 }
             }
@@ -88,11 +100,11 @@ public class GameBoard {
 
     public List<int[]> findMatchingCells(int sum) {
         List<int[]> matches = new ArrayList<>();
-        int center = getCenter();
+        int center = getCenter().getValue();
 
         for (int i = 0; i < BOARD_SIZE; i++) {
             for (int j = 0; j < BOARD_SIZE; j++) {
-                if (isOuterCell(i, j) && board[i][j] + center == sum) {
+                if (isOuterCell(i, j) && board[i][j].getValue() + center == sum) {
                     matches.add(new int[]{i, j});
                 }
             }
@@ -100,22 +112,9 @@ public class GameBoard {
         return matches;
     }
 
-    public int[] getLastAddedCell() {
-        // Find the last cell that was added to fill
-        // This is a simplified version - in practice we'd track this better
-        for (int i = 0; i < BOARD_SIZE; i++) {
-            for (int j = 0; j < BOARD_SIZE; j++) {
-                if (isOuterCell(i, j) && fillStatus[i][j]) {
-                    // Check if this is the last one (simplified)
-                    return new int[]{i, j};
-                }
-            }
-        }
-        return null;
-    }
-
-    public void replaceCell(int row, int col) {
-        board[row][col] = random.nextInt(maxValue - minValue + 1) + minValue;
+    // Returns last cell added to fill. Cannot be null, no null check required, only called once fill is complete.
+    public Cell getLastAddedCell() {
+        return lastAddedCell;
     }
 
     public void setValueRange(int min, int max) {
@@ -131,12 +130,8 @@ public class GameBoard {
         return maxValue;
     }
 
-    public int[][] getBoard() {
+    public Cell[][] getBoard() {
         return board;
-    }
-
-    public boolean[][] getFillStatus() {
-        return fillStatus;
     }
 
     public int getBoardSize() {
