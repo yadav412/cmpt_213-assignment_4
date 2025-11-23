@@ -1,7 +1,7 @@
 package model.weapon;
 
 import model.Fill;
-import model.Character;
+import model.Player;
 
 /**
  * Null Object pattern implementation for when player has no weapon.
@@ -18,7 +18,7 @@ public class NoWeapon implements Weapon {
     }
     
     @Override
-    public AttackResult applyEffect(Fill fill, Character[] opponents, int baseDamage, int targetIndex) {
+    public AttackResult applyEffect(Fill fill, Player[] opponents, int baseDamage, int targetIndex) {
         // No weapon, just target the selected character
         return new AttackResult(new int[]{targetIndex}, new double[]{1.0}, "");
     }

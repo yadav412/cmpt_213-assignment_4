@@ -1,7 +1,7 @@
 package model.weapon;
 
 import model.Fill;
-import model.Character;
+import model.Player;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -18,7 +18,7 @@ public class SparkleDagger implements Weapon {
     }
     
     @Override
-    public AttackResult applyEffect(Fill fill, Character[] opponents, int baseDamage, int targetIndex) {
+    public AttackResult applyEffect(Fill fill, Player[] opponents, int baseDamage, int targetIndex) {
         List<Integer> targets = new ArrayList<>();
         List<Double> multipliers = new ArrayList<>();
         

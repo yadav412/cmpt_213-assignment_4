@@ -1,7 +1,7 @@
 package model.weapon;
 
 import model.Fill;
-import model.Character;
+import model.Player;
 
 /**
  * Base interface for weapons.
@@ -15,7 +15,7 @@ public interface Weapon {
     
     // Applies weapon effects to determine attack targets and damage multipliers.
     // Returns an AttackResult describing the effects.
-    AttackResult applyEffect(Fill fill, Character[] opponents, int baseDamage, int targetIndex);
+    AttackResult applyEffect(Fill fill, Player[] opponents, int baseDamage, int targetIndex);
     
     // Attack result describing weapon effects.
     class AttackResult {

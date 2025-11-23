@@ -9,20 +9,17 @@ import java.util.Random;
  * The center cell is at position [1][1].
  * Outer cells are the 8 cells around the edge.
  */
-public class Map {
+public class GameBoard {
     private static final int BOARD_SIZE = 3; // 3x3 board size (indices: 0-2)
-    private final int[][] board;
+    private final Cell[][] board;
     private final boolean[][] fillStatus; // tracks which cells are part of current fill
     private int minValue;
     private int maxValue;
     private Random random;
 
-    public Map(int minValue, int maxValue) {
-        this.minValue = minValue;
-        this.maxValue = maxValue;
-        this.random = new Random();
-        // generates 2D array (board) that can hold integer values
-        this.board = new int[BOARD_SIZE][BOARD_SIZE];
+    public GameBoard() {
+        // generates 2D array of cells (board) that can hold integer values between 0-15
+        this.board = new Cell[BOARD_SIZE][BOARD_SIZE];
         this.fillStatus = new boolean[BOARD_SIZE][BOARD_SIZE];
         // initialize board with random values
         initializeMap();
@@ -31,7 +28,7 @@ public class Map {
     private void initializeMap() {
         for (int row = 0; row < BOARD_SIZE; row++) {
             for (int col = 0; col < BOARD_SIZE; col++) {
-                board[row][col] = random.nextInt(maxValue - minValue + 1) + minValue;
+                board[row][col] = new Cell(row, col);
             }
         }
     }

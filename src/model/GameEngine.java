@@ -1,22 +1,36 @@
 package model;
 
+import model.ring.Ring;
+import model.weapon.Weapon;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
 public class GameEngine {
-    private Map map;
+    private static final int MIN_INT_VALUE = 0;
+    private static final int MAX_INT_VALUE = 16;
+    private GameBoard board;
     private Player player;
     private List<Opponent> opponents;
     private Fill currentFill;
-    private int totalMovesInFill;  // Track for weapons like Fire Staff
+    private Weapon weapon;
+    private Ring[] rings;
+    private int totalMovesInFill;  // to track for weapons like Fire Staff
     private StatsTracker stats;
     private List<GameObserver> observers;
     private Random random;
-    private int turnCounter;  // For periodic opponent attacks
+    private int turnCounter;  // for periodic opponent attacks
+    private int nextOpponentAttack;
+    private boolean cheatLowHealth;
+    private boolean cheatHighHealth;
+    private int basePlayerHealth;
+    private int baseOpponentHealth;
+    private int basePlayerDamage;
+
 
     public GameEngine(Player player) {
-        this.map = new Map();
+        this.board = new GameBoard();
         this.player = player;
         this.opponents = createOpponents();
         this.currentFill = new Fill();

@@ -1,7 +1,7 @@
 package model;
 
 /**
- * Tracks state of a cell
+ * A cell that contains a randomly generated number between 0-15. Tracks state of a cell
  */
 
 public class Cell {
