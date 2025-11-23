@@ -8,25 +8,16 @@ import model.Character;
  * Uses Null Object pattern - NoWeapon implements this.
  */
 public interface Weapon {
-    /**
-     * Determines if this weapon activates based on the fill properties.
-     */
+    // Determines if this weapon activates based on the fill properties.
     boolean activates(Fill fill);
-    
-    /**
-     * Gets the name of the weapon.
-     */
+
     String getName();
     
-    /**
-     * Applies weapon effects to determine attack targets and damage multipliers.
-     * Returns an AttackResult describing the effects.
-     */
+    // Applies weapon effects to determine attack targets and damage multipliers.
+    // Returns an AttackResult describing the effects.
     AttackResult applyEffect(Fill fill, Character[] opponents, int baseDamage, int targetIndex);
     
-    /**
-     * Attack result describing weapon effects.
-     */
+    // Attack result describing weapon effects.
     class AttackResult {
         public final int[] targetIndices;
         public final double[] damageMultipliers;

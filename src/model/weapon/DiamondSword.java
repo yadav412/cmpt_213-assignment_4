@@ -3,6 +3,9 @@ package model.weapon;
 import model.Fill;
 import model.Character;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class DiamondSword implements Weapon {
     @Override
     public boolean activates(Fill fill) {

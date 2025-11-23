@@ -60,7 +60,7 @@ public class Map {
         return !(row == 1 && col == 1);
     }
 
-    public void setCell(int row, int col, int value) {
+    public void setCellValue(int row, int col, int value) {
         board[row][col] = value;
     }
 
