@@ -28,8 +28,8 @@ public class GameEngine {
         this.currentFill = new Fill();
         this.observers = new ArrayList<>();
         this.stats = new StatsTracker();
-        // TODO: Register stats as observer so it can track game events
-        // Missing: registerObserver(stats);
+        // Register stats as observer so it can track game events
+        registerObserver(stats);
         this.random = new Random();
         this.turnCounter = 0;
 
