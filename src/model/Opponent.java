@@ -22,4 +22,8 @@ public class Opponent {
         return health;
     }
 
+    public void setHealth(int newHealth) {
+        this.health = newHealth;
+    }
+
 }

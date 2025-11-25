@@ -46,15 +46,12 @@ public class GameEngine {
         this.board = new GameBoard();
         this.player = new Player(basePlayerHealth); // create/reset player
 
+        // Reset cheat codes that persist only until end of match
+        // (Assignment: "This setting persists only until the end of the match")
         this.cheatLowHealth = false;
         this.cheatHighHealth = false;
 
         int opponentHealth = baseOpponentHealth;
-        if (cheatLowHealth) {
-            opponentHealth = 50;
-        } else if (cheatHighHealth) {
-            opponentHealth = 2000;
-        }
 
         this.opponents = new Opponent[3];
         for (int i = 0; i < 3; i++) {
@@ -303,10 +300,30 @@ public class GameEngine {
 
     public void setCheatLowHealth(boolean value) {
         this.cheatLowHealth = value;
+        // Apply cheat to current opponents if match is in progress
+        if (opponents != null) {
+            applyHealthCheatToOpponents();
+        }
     }
 
     public void setCheatHighHealth(boolean value) {
         this.cheatHighHealth = value;
+
+        if (opponents != null) {
+            applyHealthCheatToOpponents();
+        }
+    }
+
+    private void applyHealthCheatToOpponents() {
+        int newHealth = baseOpponentHealth;
+        if (cheatLowHealth) {
+            newHealth = 50;
+        } else if (cheatHighHealth) {
+            newHealth = 2000;
+        }
+        for (Opponent opponent : opponents) {
+            opponent.setHealth(newHealth);
+        }
     }
 
     public void setMaxValue(int max) {
