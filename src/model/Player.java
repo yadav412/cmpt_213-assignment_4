@@ -42,6 +42,8 @@ public class Player {
 
     public GameEvent.AttackData attack(Opponent[] opponents, Fill fill) {
         // Get last cell to determine target
+        // NOTE: Uses Fill.getLastCell() which tracks the last cell added to the fill
+        // This should match GameBoard.getLastAddedCell() since they're updated together
         int[] lastCell = fill.getLastCell();
         if (lastCell == null) {
             // No cells in fill? Shouldn't happen, but handle gracefully
@@ -59,6 +61,10 @@ public class Player {
             if (ring.activates(fill)) {  // Pass Fill, not int!
                 ringMultiplier *= ring.getDamageMultiplier();
                 activeRings.add(ring.getName());
+                // TODO: Fire EQUIPMENT_ACTIVATED event for ring (StatsTracker needs this)
+                // Missing: Need access to GameEngine's notifyObservers or pass observer reference
+                // Missing: notifyObservers(new GameEvent(GameEvent.EventType.EQUIPMENT_ACTIVATED, "Player",
+                //          new StatsTracker.EquipmentActivationData(ring.getName(), false)));
             }
         }
 
@@ -66,6 +72,10 @@ public class Player {
         Weapon.AttackResult weaponResult;
         if (weapon.activates(fill)) {
             weaponResult = weapon.applyEffect(fill, opponents, baseDamage, targetIndex);
+            // TODO: Fire EQUIPMENT_ACTIVATED event for weapon (StatsTracker needs this)
+            // Missing: Need access to GameEngine's notifyObservers or pass observer reference
+            // Missing: notifyObservers(new GameEvent(GameEvent.EventType.EQUIPMENT_ACTIVATED, "Player",
+            //          new StatsTracker.EquipmentActivationData(weapon.getName(), true)));
         } else {
             weaponResult = new Weapon.AttackResult(new int[]{targetIndex}, new double[]{1.0});
         }
@@ -81,6 +91,10 @@ public class Player {
                 opponents[targetIdx].takeDamage(damage);
                 boolean killed = !opponents[targetIdx].isAlive();
                 targets.add(new GameEvent.TargetDamage(targetIdx, damage, killed, false));
+                // TODO: Fire CHARACTER_DAMAGED event for opponent (StatsTracker needs this for totalDamageDone)
+                // Missing: Need access to GameEngine's notifyObservers or pass observer reference
+                // Missing: notifyObservers(new GameEvent(GameEvent.EventType.CHARACTER_DAMAGED, "Player",
+                //          new StatsTracker.DamageData(damage, false)));
             } else {
                 // Target already dead - missed
                 targets.add(new GameEvent.TargetDamage(targetIdx, 0, false, true));

@@ -15,7 +15,7 @@ public class GameEngine {
     private StatsTracker stats;
     private List<GameObserver> observers;
     private Random random;
-    private int turnCounter;  // for periodic opponent attacks
+    private int turnCounter; // for periodic opponent attacks
     private int nextOpponentAttack;
     private boolean cheatLowHealth;
     private boolean cheatHighHealth;
@@ -23,12 +23,13 @@ public class GameEngine {
     private int baseOpponentHealth;
     private int baseOpponentDamage;
 
-
     public GameEngine() {
         this.board = new GameBoard();
         this.currentFill = new Fill();
         this.observers = new ArrayList<>();
         this.stats = new StatsTracker();
+        // TODO: Register stats as observer so it can track game events
+        // Missing: registerObserver(stats);
         this.random = new Random();
         this.turnCounter = 0;
 
@@ -116,15 +117,18 @@ public class GameEngine {
         boolean wasComplete = board.isFillComplete();
 
         // Add to fill (even if already in fill - allows re-selection)
+        // NOTE: We add the OLD value to strength, then regenerate the cell with a NEW
+        // value
+        // This allows Fire Staff to count re-selections (cellCount > 8) while using old
+        // values for strength
         board.addToFill(row, col);
-        currentFill.addCell(row, col, value);
+        currentFill.addCell(row, col, value); // Adds OLD value to strength
 
-        // Update center
-        int centerValue = board.getCenter().getValue();
-        board.setCell(1, 1, value);
+        // Update center - replace center value with the selected cell's OLD value
+        board.setCellValue(1, 1, value);
 
-        // Replace cell with random value
-        board.replaceCell(row, col);
+        // Replace cell with NEW random value (for next turn)
+        board.regenerateCellValue(row, col);
 
         notifyObservers(new GameEvent(GameEvent.EventType.CELL_ADDED_TO_FILL, "GameEngine",
                 new GameEvent.CellAddedData(row, col, value, currentFill.getStrength())));
@@ -133,7 +137,12 @@ public class GameEngine {
         // Attack triggers immediately when fill becomes complete
         // Note: cell count can be >8 if cells were re-selected before completion
         if (!wasComplete && board.isFillComplete()) {
+            // TODO: Fire FILL_COMPLETED event before attack (StatsTracker needs this)
+            // Missing: notifyObservers(new GameEvent(GameEvent.EventType.FILL_COMPLETED,
+            // "GameEngine", null));
             performPlayerAttack();
+            // NOTE: Order matters - reset fill AFTER attack so attack can use currentFill
+            // data
             board.resetFill();
             currentFill.reset();
             notifyObservers(new GameEvent(GameEvent.EventType.FILL_STARTED, "GameEngine", null));
@@ -153,6 +162,11 @@ public class GameEngine {
 
     private void performPlayerAttack() {
         // Player handles all attack logic and returns the data
+        // TODO: Player.attack() needs to fire EQUIPMENT_ACTIVATED events, but Player
+        // doesn't have access to observers
+        // FIXME: Either pass GameEngine reference to Player, or have Player return
+        // equipment activation info
+        // and fire events here in GameEngine
         GameEvent.AttackData attackData = player.attack(opponents, currentFill);
 
         // Notify observers
@@ -167,13 +181,20 @@ public class GameEngine {
     public Weapon getRandomWeapon() {
         int weaponNum = random.nextInt(6) + 1;
         switch (weaponNum) {
-            case 1: return new LightningWand();
-            case 2: return new FireStaff();
-            case 3: return new FrostBow();
-            case 4: return new StoneHammer();
-            case 5: return new DiamondSword();
-            case 6: return new SparkleDagger();
-            default: return new NoWeapon();
+            case 1:
+                return new LightningWand();
+            case 2:
+                return new FireStaff();
+            case 3:
+                return new FrostBow();
+            case 4:
+                return new StoneHammer();
+            case 5:
+                return new DiamondSword();
+            case 6:
+                return new SparkleDagger();
+            default:
+                return new NoWeapon();
         }
     }
 
@@ -253,10 +274,24 @@ public class GameEngine {
     }
 
     // Getters
-    public GameBoard getBoard() { return board; }
-    public Player getPlayer() { return player; }
-    public Opponent[] getOpponents() { return opponents; }
-    public Fill getCurrentFill() { return currentFill; }
+    public GameBoard getBoard() {
+        return board;
+    }
+
+    public Player getPlayer() {
+        return player;
+    }
+
+    public Opponent[] getOpponents() {
+        return opponents;
+    }
+
+    public Fill getCurrentFill() {
+        return currentFill;
+    }
+    // TODO: Add getStats() method - TextUI is trying to call gameEngine.getStats()
+    // but it doesn't exist
+    // Missing: public StatsTracker getStats() { return stats; }
 
     public void setCheatLowHealth(boolean value) {
         this.cheatLowHealth = value;
@@ -274,6 +309,3 @@ public class GameEngine {
     }
 
 }
-
-
-

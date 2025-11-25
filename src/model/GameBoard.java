@@ -25,10 +25,11 @@ public class GameBoard {
         this.minValue = DEFAULT_MIN;
         this.maxValue = DEFAULT_MAX;
         this.random = new Random();
-        initializeCells();  // initialize board with random values
+        initializeCells(); // initialize board with random values
     }
 
-    // A board of cells is generated with a random number within the range of min - max
+    // A board of cells is generated with a random number within the range of min -
+    // max
     // min and max are stored in GameBoard but passed to the cell to create itself
     private void initializeCells() {
         for (int row = 0; row < BOARD_SIZE; row++) {
@@ -61,7 +62,7 @@ public class GameBoard {
     }
 
     public boolean isInFill(int row, int col) {
-        return board[row][col].isInFill();  // ask the cell if it is in the fill
+        return board[row][col].isInFill(); // ask the cell if it is in the fill
     }
 
     public boolean isOuterCell(int row, int col) {
@@ -79,7 +80,7 @@ public class GameBoard {
     public void addToFill(int row, int col) {
         if (isOuterCell(row, col)) {
             lastAddedCell = board[row][col];
-            board[row][col].addToFill();    // cell marks itself as being part of the fill
+            board[row][col].addToFill(); // cell marks itself as being part of the fill
         }
     }
 
@@ -109,14 +110,15 @@ public class GameBoard {
         for (int i = 0; i < BOARD_SIZE; i++) {
             for (int j = 0; j < BOARD_SIZE; j++) {
                 if (isOuterCell(i, j) && board[i][j].getValue() + center == sum) {
-                    matches.add(new int[]{i, j});
+                    matches.add(new int[] { i, j });
                 }
             }
         }
         return matches;
     }
 
-    // Returns last cell added to fill. Cannot be null, no null check required, only called once fill is complete.
+    // Returns last cell added to fill. Cannot be null, no null check required, only
+    // called once fill is complete.
     public Cell getLastAddedCell() {
         return lastAddedCell;
     }
@@ -142,4 +144,3 @@ public class GameBoard {
         return BOARD_SIZE;
     }
 }
-
