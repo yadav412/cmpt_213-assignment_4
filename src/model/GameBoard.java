@@ -72,6 +72,10 @@ public class GameBoard {
         board[row][col].setValue(value);
     }
 
+    public int getCellValue(int row, int col) {
+        return board[row][col].getValue();
+    }
+
     public void addToFill(int row, int col) {
         if (isOuterCell(row, col)) {
             lastAddedCell = board[row][col];

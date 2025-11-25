@@ -3,12 +3,23 @@ package model;
 public class Opponent {
     private int health;
 
-    public void takeDamage(int damage) {
-
+    public Opponent(int startingHealth) {
+        this.health = startingHealth;
     }
 
-    public int attackDamage() {
+    public void takeDamage(int damage) {
+        health -= damage;
+        if (health < 0) {
+            health = 0;
+        }
+    }
 
+    public boolean isAlive() {
+        return health > 0;
+    }
+
+    public int getHealth() {
+        return health;
     }
 
 }

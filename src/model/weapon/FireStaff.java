@@ -1,7 +1,7 @@
 package model.weapon;
 
 import model.Fill;
-import model.Player;
+import model.Opponent;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,7 +17,7 @@ public class FireStaff implements Weapon {
     }
     
     @Override
-    public AttackResult applyEffect(Fill fill, Player[] opponents, int baseDamage, int targetIndex) {
+    public AttackResult applyEffect(Fill fill, Opponent[] opponents, int baseDamage, int targetIndex) {
         List<Integer> targets = new ArrayList<>();
         List<Double> multipliers = new ArrayList<>();
         

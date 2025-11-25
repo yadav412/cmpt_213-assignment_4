@@ -1,6 +1,7 @@
 package model.weapon;
 
 import model.Fill;
+import model.Opponent;
 import model.Player;
 
 import java.util.ArrayList;
@@ -18,7 +19,7 @@ public class DiamondSword implements Weapon {
     }
     
     @Override
-    public AttackResult applyEffect(Fill fill, Player[] opponents, int baseDamage, int targetIndex) {
+    public AttackResult applyEffect(Fill fill, Opponent[] opponents, int baseDamage, int targetIndex) {
         List<Integer> targets = new ArrayList<>();
         List<Double> multipliers = new ArrayList<>();
         
