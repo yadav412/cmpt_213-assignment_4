@@ -219,33 +219,49 @@ public class TextUI implements GameObserver {
     }
 
     private void displayAttack(GameEvent.AttackData data) {
-        System.out.println("\nAttack, Fill strength: " + data.strength);
+        System.out.println("\nFill complete! Strength is " + data.strength + ".");
 
-        // display ring activations
+        // display ring activations with bonus percentages
         for (String ringName : data.activeRings) {
-            System.out.println(ringName + " activated!");
-        }
-
-        // display weapon effect
-        if (!data.weaponDescription.isEmpty()) {
-            System.out.println("  🗡️  " + data.weaponDescription);
+            int bonusPercent = getRingBonusPercent(ringName);
+            System.out.println(ringName + " adds " + bonusPercent + "% bonus damage.");
         }
 
         // display damage to each target
+        // Primary target is first, then weapon targets
+        int primaryTargetIndex = data.targets.isEmpty() ? -1 : data.targets.get(0).targetIndex;
+
         for (GameEvent.TargetDamage target : data.targets) {
             String position = getPositionName(target.targetIndex);
 
+            // Show weapon targeting for additional targets (not the primary target)
+            if (data.weaponActivated && target.targetIndex != primaryTargetIndex) {
+                System.out.println(data.weaponName + " targets " + position + " character.");
+            }
+
             if (target.missed) {
-                System.out.println("Missed " + position + " opponent (already dead)");
+                System.out.println("Missed " + position + " character.");
             } else {
-                System.out.println("Hit " + position + " opponent for " +
-                        target.damage + " damage!");
+                System.out.println("Hit " + position + " character for " +
+                        target.damage + " damage.");
                 if (target.killed) {
-                    System.out.println("Killed " + position + " opponent!");
+                    System.out.println("Kills " + position + " character!");
                 }
             }
         }
         System.out.println();
+    }
+
+    private int getRingBonusPercent(String ringName) {
+        // Look up the ring from player's equipment to get its multiplier
+        Ring[] rings = gameEngine.getPlayer().getRings();
+        for (Ring ring : rings) {
+            if (ring.getName().equals(ringName)) {
+                // Convert multiplier to percentage: (multiplier - 1.0) * 100
+                return (int) Math.round((ring.getDamageMultiplier() - 1.0) * 100);
+            }
+        }
+        return 0; // Default if ring not found
     }
 
     private void displayGear() {
