@@ -18,5 +18,10 @@ public class NoRing implements Ring {
     public String getName() {
         return "None";
     }
+    
+    @Override
+    public String getDescription() {
+        return "No ring equipped";
+    }
 }
 

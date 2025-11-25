@@ -15,5 +15,10 @@ public class LittleOneRing implements Ring {
     public String getName() {
         return "The Little One";
     }
+    
+    @Override
+    public String getDescription() {
+        return "50% damage bonus if strength <= 90";
+    }
 }
 

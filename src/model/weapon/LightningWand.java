@@ -18,6 +18,11 @@ public class LightningWand implements Weapon {
     }
     
     @Override
+    public String getDescription() {
+        return "Targets an additional random opponent if fill completed in < 10 seconds";
+    }
+    
+    @Override
     public AttackResult applyEffect(Fill fill, Opponent[] opponents, int baseDamage, int targetIndex) {
         List<Integer> targets = new ArrayList<>();
         List<Double> multipliers = new ArrayList<>();

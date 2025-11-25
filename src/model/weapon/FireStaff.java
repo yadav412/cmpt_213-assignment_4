@@ -17,6 +17,11 @@ public class FireStaff implements Weapon {
     }
     
     @Override
+    public String getDescription() {
+        return "Hits primary target and adjacent opponents if cell count >= 15";
+    }
+    
+    @Override
     public AttackResult applyEffect(Fill fill, Opponent[] opponents, int baseDamage, int targetIndex) {
         List<Integer> targets = new ArrayList<>();
         List<Double> multipliers = new ArrayList<>();

@@ -18,6 +18,11 @@ public class FrostBow implements Weapon {
     }
     
     @Override
+    public String getDescription() {
+        return "Hits all opponents if fill values are in ascending order";
+    }
+    
+    @Override
     public AttackResult applyEffect(Fill fill, Opponent[] opponents, int baseDamage, int targetIndex) {
         List<Integer> targets = new ArrayList<>();
         List<Double> multipliers = new ArrayList<>();

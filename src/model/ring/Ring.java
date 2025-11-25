@@ -1,7 +1,5 @@
 package model.ring;
 
-import model.Fill;
-
 /**
  * Base interface for rings.
  * Uses Null Object pattern - NoRing implements this.
@@ -13,5 +11,6 @@ public interface Ring {
     double getDamageMultiplier();
 
     String getName();
-}
 
+    String getDescription();
+}

@@ -1,7 +1,5 @@
 package model;
 
-import model.ring.Ring;
-import model.weapon.Weapon;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -55,6 +53,14 @@ public class StatsTracker implements GameObserver {
             case FILL_COMPLETED:
                 fillsCompleted++;
                 break;
+            case FILL_STARTED:
+            case CELL_ADDED_TO_FILL:
+            case ATTACK_PERFORMED:
+            case CHARACTER_KILLED:
+            case TURN_FAILED:
+            case OPPONENT_ATTACKED:
+                // These events don't need to be tracked in statistics
+                break;
         }
     }
 
@@ -107,4 +113,3 @@ public class StatsTracker implements GameObserver {
         }
     }
 }
-

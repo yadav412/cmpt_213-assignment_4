@@ -16,6 +16,11 @@ public class PrimeDirectiveRing implements Ring {
         return "The Prime Directive";
     }
     
+    @Override
+    public String getDescription() {
+        return "100% damage bonus if strength is prime";
+    }
+    
     private boolean isPrime(int n) {
         if (n < 2) return false;
         if (n == 2) return true;

@@ -46,6 +46,9 @@ public class GameEngine {
         this.board = new GameBoard();
         this.player = new Player(basePlayerHealth); // create/reset player
 
+        this.cheatLowHealth = false;
+        this.cheatHighHealth = false;
+
         int opponentHealth = baseOpponentHealth;
         if (cheatLowHealth) {
             opponentHealth = 50;
@@ -116,11 +119,6 @@ public class GameEngine {
         // Check if fill was already complete before this move
         boolean wasComplete = board.isFillComplete();
 
-        // Add to fill (even if already in fill - allows re-selection)
-        // NOTE: We add the OLD value to strength, then regenerate the cell with a NEW
-        // value
-        // This allows Fire Staff to count re-selections (cellCount > 8) while using old
-        // values for strength
         board.addToFill(row, col);
         currentFill.addCell(row, col, value); // Adds OLD value to strength
 
@@ -133,16 +131,11 @@ public class GameEngine {
         notifyObservers(new GameEvent(GameEvent.EventType.CELL_ADDED_TO_FILL, "GameEngine",
                 new GameEvent.CellAddedData(row, col, value, currentFill.getStrength())));
 
-        // Check if fill just became complete (all 8 outer cells now filled)
-        // Attack triggers immediately when fill becomes complete
-        // Note: cell count can be >8 if cells were re-selected before completion
         if (!wasComplete && board.isFillComplete()) {
-            // TODO: Fire FILL_COMPLETED event before attack (StatsTracker needs this)
-            // Missing: notifyObservers(new GameEvent(GameEvent.EventType.FILL_COMPLETED,
-            // "GameEngine", null));
+            // Fire FILL_COMPLETED event before attack (StatsTracker needs this)
+            notifyObservers(new GameEvent(GameEvent.EventType.FILL_COMPLETED, "GameEngine", null));
             performPlayerAttack();
-            // NOTE: Order matters - reset fill AFTER attack so attack can use currentFill
-            // data
+
             board.resetFill();
             currentFill.reset();
             notifyObservers(new GameEvent(GameEvent.EventType.FILL_STARTED, "GameEngine", null));
@@ -162,12 +155,26 @@ public class GameEngine {
 
     private void performPlayerAttack() {
         // Player handles all attack logic and returns the data
-        // TODO: Player.attack() needs to fire EQUIPMENT_ACTIVATED events, but Player
-        // doesn't have access to observers
-        // FIXME: Either pass GameEngine reference to Player, or have Player return
-        // equipment activation info
-        // and fire events here in GameEngine
         GameEvent.AttackData attackData = player.attack(opponents, currentFill);
+
+        // Fire EQUIPMENT_ACTIVATED events for rings that activated
+        for (String ringName : attackData.activeRings) {
+            notifyObservers(new GameEvent(GameEvent.EventType.EQUIPMENT_ACTIVATED, "Player",
+                    new StatsTracker.EquipmentActivationData(ringName, false)));
+        }
+
+        if (attackData.weaponActivated) {
+            notifyObservers(new GameEvent(GameEvent.EventType.EQUIPMENT_ACTIVATED, "Player",
+                    new StatsTracker.EquipmentActivationData(attackData.weaponName, true)));
+        }
+
+        // Fire CHARACTER_DAMAGED events for each target that took damage
+        for (GameEvent.TargetDamage target : attackData.targets) {
+            if (target.damage > 0 && !target.missed) {
+                notifyObservers(new GameEvent(GameEvent.EventType.CHARACTER_DAMAGED, "Player",
+                        new StatsTracker.DamageData(target.damage, false)));
+            }
+        }
 
         // Notify observers
         notifyObservers(new GameEvent(GameEvent.EventType.ATTACK_PERFORMED, "Player", attackData));
@@ -289,9 +296,10 @@ public class GameEngine {
     public Fill getCurrentFill() {
         return currentFill;
     }
-    // TODO: Add getStats() method - TextUI is trying to call gameEngine.getStats()
-    // but it doesn't exist
-    // Missing: public StatsTracker getStats() { return stats; }
+
+    public StatsTracker getStats() {
+        return stats;
+    }
 
     public void setCheatLowHealth(boolean value) {
         this.cheatLowHealth = value;

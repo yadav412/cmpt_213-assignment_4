@@ -13,6 +13,8 @@ public interface Weapon {
 
     String getName();
     
+    String getDescription();
+    
     // Applies weapon effects to determine attack targets and damage multipliers.
     // Returns an AttackResult describing the effects.
     AttackResult applyEffect(Fill fill, Opponent[] opponents, int baseDamage, int targetIndex);

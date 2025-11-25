@@ -18,6 +18,11 @@ public class StoneHammer implements Weapon {
     }
     
     @Override
+    public String getDescription() {
+        return "Hits all opponents at 80% damage if cell count >= 10";
+    }
+    
+    @Override
     public AttackResult applyEffect(Fill fill, Opponent[] opponents, int baseDamage, int targetIndex) {
         List<Integer> targets = new ArrayList<>();
         List<Double> multipliers = new ArrayList<>();

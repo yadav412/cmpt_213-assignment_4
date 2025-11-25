@@ -49,25 +49,27 @@ public class GameEvent {
         public final List<String> activeRings;
         public final String weaponName;
         public final boolean weaponActivated;
+        public final String weaponDescription;
         public final List<TargetDamage> targets;
 
         public AttackData(int strength, List<String> activeRings,
-                          String weaponName, boolean weaponActivated,
-                          List<TargetDamage> targets) {
+                String weaponName, boolean weaponActivated,
+                String weaponDescription, List<TargetDamage> targets) {
             this.strength = strength;
             this.activeRings = activeRings;
             this.weaponName = weaponName;
             this.weaponActivated = weaponActivated;
+            this.weaponDescription = weaponDescription;
             this.targets = targets;
         }
     }
 
     // Information about damage dealt to a single target.
     public static class TargetDamage {
-        public final int targetIndex;  // 0=left, 1=middle, 2=right
+        public final int targetIndex; // 0=left, 1=middle, 2=right
         public final int damage;
         public final boolean killed;
-        public final boolean missed;   // true if target was already dead
+        public final boolean missed; // true if target was already dead
 
         public TargetDamage(int targetIndex, int damage, boolean killed, boolean missed) {
             this.targetIndex = targetIndex;
@@ -107,6 +109,4 @@ public class GameEvent {
             this.damage = damage;
         }
     }
-
 }
-

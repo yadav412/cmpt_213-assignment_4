@@ -15,5 +15,10 @@ public class TenacityRing implements Ring {
     public String getName() {
         return "Ring of Ten-acity";
     }
+    
+    @Override
+    public String getDescription() {
+        return "50% damage bonus if strength is a multiple of 10";
+    }
 }
 

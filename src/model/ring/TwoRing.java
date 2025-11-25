@@ -16,6 +16,11 @@ public class TwoRing implements Ring {
         return "The Two Ring";
     }
     
+    @Override
+    public String getDescription() {
+        return "1000% damage bonus if strength is a power of 2";
+    }
+    
     private boolean isPowerOfTwo(int n) {
         if (n < 1) return false;
         return (n & (n - 1)) == 0;

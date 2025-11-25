@@ -18,6 +18,11 @@ public class NoWeapon implements Weapon {
     }
     
     @Override
+    public String getDescription() {
+        return "No weapon equipped";
+    }
+    
+    @Override
     public AttackResult applyEffect(Fill fill, Opponent[] opponents, int baseDamage, int targetIndex) {
         // No weapon, just target the selected character
         return new AttackResult(new int[]{targetIndex}, new double[]{1.0}, "");

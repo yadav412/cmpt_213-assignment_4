@@ -1,8 +1,5 @@
 import view.TextUI;
-<<<<<<< Updated upstream
-=======
 
->>>>>>> Stashed changes
 /**
  * Main entry point for the Sum-Awesome Game.
  * Creates and runs the text-based user interface.
