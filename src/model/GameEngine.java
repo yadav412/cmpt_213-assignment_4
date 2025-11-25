@@ -22,6 +22,9 @@ public class GameEngine {
     private int basePlayerHealth;
     private int baseOpponentHealth;
     private int baseOpponentDamage;
+    // Store equipped weapon and rings to persist across matches
+    private Integer equippedWeaponNumber = null;
+    private int[] equippedRingNumbers = null;
 
     public GameEngine() {
         this.board = new GameBoard();
@@ -45,6 +48,16 @@ public class GameEngine {
     public void startNewMatch() {
         this.board = new GameBoard();
         this.player = new Player(basePlayerHealth); // create/reset player
+
+        // Re-equip weapon and rings if they were set via cheats
+        if (equippedWeaponNumber != null) {
+            player.setWeapon(createWeapon(equippedWeaponNumber));
+        }
+        if (equippedRingNumbers != null) {
+            player.setRings(createRing(equippedRingNumbers[0]),
+                    createRing(equippedRingNumbers[1]),
+                    createRing(equippedRingNumbers[2]));
+        }
 
         // Reset cheat codes that persist only until end of match
         // (Assignment: "This setting persists only until the end of the match")
@@ -234,10 +247,14 @@ public class GameEngine {
     }
 
     public void equipPlayerRings(int ring1, int ring2, int ring3) {
+        // Store ring numbers to persist across matches
+        this.equippedRingNumbers = new int[] { ring1, ring2, ring3 };
         player.setRings(createRing(ring1), createRing(ring2), createRing(ring3));
     }
 
     public void equipPlayerWeapon(int weaponNumber) {
+        // Store weapon number to persist across matches
+        this.equippedWeaponNumber = weaponNumber;
         player.setWeapon(createWeapon(weaponNumber));
     }
 
