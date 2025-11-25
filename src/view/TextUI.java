@@ -9,7 +9,8 @@ import java.util.Scanner;
 
 /**
  * Text-based user interface for the game.
- * Handles all input/output and implements the Observer pattern to display game events.
+ * Handles all input/output and implements the Observer pattern to display game
+ * events.
  */
 public class TextUI implements GameObserver {
     private final GameEngine gameEngine;
@@ -49,10 +50,10 @@ public class TextUI implements GameObserver {
                 break;
 
             case CELL_ADDED_TO_FILL:
-                break;  // Silently update, the board will show on next turn
+                break; // Silently update, the board will show on next turn
 
             case FILL_COMPLETED:
-                break;  // Attack display handles this
+                break; // Attack display handles this
 
             case MATCH_WON:
                 System.out.println("\nVictory, you have defeated all opponents!");
@@ -76,12 +77,12 @@ public class TextUI implements GameObserver {
                 break;
 
             case FILL_STARTED:
-                break;  // silently starting a new fill
+                break; // silently starting a new fill
 
             case CHARACTER_DAMAGED:
             case CHARACTER_KILLED:
             case EQUIPMENT_ACTIVATED:
-                break;  // tracked by StatsTracker, not displayed directly
+                break; // tracked by StatsTracker, not displayed directly
         }
     }
 
@@ -119,7 +120,8 @@ public class TextUI implements GameObserver {
         String[] parts = input.split(" ");
 
         if (parts.length < 2) {
-            System.out.println("Invalid cheat. Available: lowhealth, highhealth, weapon #, rings # # #, max #");
+            System.out.println(
+                    "Invalid cheat. Available: lowhealth, highhealth, weapon <number>, rings <number> <number> <number>, max <number>");
             return;
         }
 
@@ -139,29 +141,29 @@ public class TextUI implements GameObserver {
 
                 case "weapon":
                     if (parts.length < 3) {
-                        System.out.println("Usage: cheat weapon #");
+                        System.out.println("Usage: cheat weapon <number>");
                         return;
                     }
                     int weaponNum = Integer.parseInt(parts[2]);
                     gameEngine.equipPlayerWeapon(weaponNum);
-                    System.out.println("✓ Equipped weapon #" + weaponNum);
+                    System.out.println(" Equipped weapon " + weaponNum);
                     break;
 
                 case "rings":
                     if (parts.length < 5) {
-                        System.out.println("Usage: cheat rings # # #");
+                        System.out.println("Usage: cheat rings <number> <number> <number>");
                         return;
                     }
                     int ring1 = Integer.parseInt(parts[2]);
                     int ring2 = Integer.parseInt(parts[3]);
                     int ring3 = Integer.parseInt(parts[4]);
                     gameEngine.equipPlayerRings(ring1, ring2, ring3);
-                    System.out.println("✓ Equipped rings: " + ring1 + ", " + ring2 + ", " + ring3);
+                    System.out.println("Equipped rings: " + ring1 + ", " + ring2 + ", " + ring3);
                     break;
 
                 case "max":
                     if (parts.length < 3) {
-                        System.out.println("Usage: cheat max #");
+                        System.out.println("Usage: cheat max <number>");
                         return;
                     }
                     int max = Integer.parseInt(parts[2]);
@@ -320,7 +322,7 @@ public class TextUI implements GameObserver {
 
         System.out.println("\nYou received: " + newWeapon.getName());
         System.out.println(newWeapon.getDescription());
-        System.out.print("\nEquip this weapon?: ");
+        System.out.print("\nEquip this weapon: ");
 
         String response = scanner.nextLine().trim().toLowerCase();
 
@@ -338,7 +340,7 @@ public class TextUI implements GameObserver {
 
         System.out.println("\nYou received: " + newRing.getName());
         System.out.println(newRing.getDescription());
-        System.out.print("\nEquip this ring?: ");
+        System.out.print("\nEquip this ring: ");
 
         String response = scanner.nextLine().trim().toLowerCase();
 
@@ -377,7 +379,7 @@ public class TextUI implements GameObserver {
             System.out.println("  " + (i + 1) + ". " + currentRings[i].getName());
         }
 
-        System.out.print("Which ring to replace? (1-3, or 0 to cancel): ");
+        System.out.print("Which ring to replace (1-3, or 0 to cancel): ");
 
         try {
             int choice = Integer.parseInt(scanner.nextLine().trim());
@@ -401,7 +403,7 @@ public class TextUI implements GameObserver {
     }
 
     private void askToContinue() {
-        System.out.print("\nPlay another match? (yes/no): ");
+        System.out.print("\nPlay another match (yes/no): ");
         String response = scanner.nextLine().trim().toLowerCase();
 
         if (response.equals("yes") || response.equals("y")) {
